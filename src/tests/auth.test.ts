@@ -18,10 +18,7 @@ vi.mock("../middleware/authMiddleware", () => ({
     next();
   }),
 }));
-// const mockauthMiddleware = vi.fn((req, res, next) => {
-//   console.log("hello");
-  
-// });
+
 
 describe("POST /signup", () => {
   it("should create a user with valid data", async () => {
@@ -45,10 +42,6 @@ describe("POST /signup", () => {
 });
 
 describe("POST /signin", () => {
-  // beforeEach(() => {
-  //   vi.clearAllMocks();
-  // });
-
   it("should allow the user to login with valid credentials", async () => {
     (prisma.user.findUnique as any).mockResolvedValue({
       id: "user-id-123",
@@ -126,3 +119,5 @@ describe("PUT /update", () => {
 
  
 });
+
+

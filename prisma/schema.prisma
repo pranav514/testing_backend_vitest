@@ -27,6 +27,7 @@ model Listing{
   id String @id @default(uuid())
   title String
   description String
+  images String
   address String
   location_city String
   createdAt DateTime @default(now())
