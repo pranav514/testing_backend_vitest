@@ -108,6 +108,13 @@ router.get("/getall", (req, res) => __awaiter(void 0, void 0, void 0, function* 
                         phone_number: true,
                     },
                 },
+                pings: {
+                    select: {
+                        message: true,
+                        userId: true,
+                        createdAt: true,
+                    }
+                }
             },
         });
         return res.status(200).json({
@@ -154,11 +161,13 @@ router.get("/getlisting/:id", authMiddleware_1.authMiddleware, (req, res) => __a
 router.get('/userlisting', authMiddleware_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = req.userId;
+        console.log('userId', userId);
         const listing = yield db_1.prisma.listing.findMany({
             where: {
                 userId: userId
             }
         });
+        console.log(listing);
         return res.status(200).json({
             message: `fetched the blog of the user ${userId}`,
             listing

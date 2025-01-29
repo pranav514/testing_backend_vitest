@@ -101,6 +101,13 @@ router.get("/getall", async (req, res): Promise<any> => {
             phone_number: true,
           },
         },
+        pings : {
+          select : {
+            message : true,
+            userId : true,
+            createdAt : true,
+          }
+        }
       },
     });
     return res.status(200).json({
@@ -151,11 +158,13 @@ router.get(
 router.get('/userlisting' ,authMiddleware,async (req  ,res) : Promise<any> => {
     try{
             const userId  = req.userId
+            console.log('userId' , userId)
     const listing = await prisma.listing.findMany({
         where : {
             userId : userId
         }
     })
+    console.log(listing)
     return res.status(200).json({
         message : `fetched the blog of the user ${userId}`,
         listing
