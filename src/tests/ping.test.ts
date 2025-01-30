@@ -9,20 +9,19 @@ vi.mock("../middleware/authMiddleware", () => ({
     next();
   }),
 }));
-
 vi.mock("../db", () => ({
   prisma: {
     listing: {
       findUnique: vi.fn(() =>
         Promise.resolve({
-          prefered_gender: "female",  // Simulating a listing with a preferred gender
+          prefered_gender: "female", 
         })
       ),
     },
     user: {
       findUnique: vi.fn(() =>
         Promise.resolve({
-          gender: "female",  // Simulating a user with the matching gender
+          gender: "female",  
         })
       ),
     },
@@ -53,8 +52,6 @@ describe("POST /createping", () => {
       .set("Authorization", "Bearer mock-token")
       .send({
         message: "test for the ping",
-        // postId: "postId_123",
-        // userId: "userId_123",
       });
     expect(res.statusCode).toBe(200);
   });
