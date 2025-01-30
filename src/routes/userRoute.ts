@@ -4,12 +4,11 @@ import {sign} from "jsonwebtoken"
 import { authMiddleware } from "../middleware/authMiddleware";
 import { isTemplateLiteralTypeNode } from "typescript";
 const router = express.Router();
-
 router.post("/auth/signup", async (req: Request, res: Response) : Promise<any> => {
   console.log("request recived");
   console.log("Received request at /api/v1/auth/signup");
 
-  const { name, email, password, phone_number } = req.body;
+  const { name,gender ,email, password, phone_number } = req.body;
 
   console.log("name", name);
   console.log("email", email);
@@ -25,6 +24,7 @@ router.post("/auth/signup", async (req: Request, res: Response) : Promise<any> =
     const user = await prisma.user.create({
       data: {
         name,
+        gender,
         email,
         password,
         phone_number,

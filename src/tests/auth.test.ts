@@ -24,6 +24,7 @@ describe("POST /signup", () => {
   it("should create a user with valid data", async () => {
     const res = await request(app).post("/api/v1/user/auth/signup").send({
       name: "xyz",
+      gender : "male",
       email: "xyz@gmail.com",
       password: "123456",
       phone_number: "789456123",

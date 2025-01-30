@@ -21,17 +21,53 @@ router.post('/createping/:id', authMiddleware_1.authMiddleware, (req, res) => __
         const { message } = req.body;
         const postId = req.params.id;
         const userId = req.userId;
-        const ping = yield db_1.prisma.ping.create({
-            data: {
-                message,
-                postId,
-                userId
+        const listing = yield db_1.prisma.listing.findUnique({
+            where: {
+                id: postId
+            },
+            select: {
+                prefered_gender: true,
             }
         });
-        return res.status(200).json({
-            message: "pinged sucessfully",
-            ping
-        });
+        if (listing === null || listing === void 0 ? void 0 : listing.prefered_gender) {
+            const user = yield db_1.prisma.user.findUnique({
+                where: {
+                    id: userId
+                },
+                select: {
+                    gender: true,
+                }
+            });
+            if ((user === null || user === void 0 ? void 0 : user.gender) == listing.prefered_gender) {
+                const ping = yield db_1.prisma.ping.create({
+                    data: {
+                        message,
+                        postId,
+                        userId
+                    }
+                });
+                return res.status(200).json({
+                    message: "pinged sucessfully",
+                    ping
+                });
+            }
+            return res.status(422).json({
+                message: `${user === null || user === void 0 ? void 0 : user.gender} is not prefered for the following room`
+            });
+        }
+        else {
+            const ping = yield db_1.prisma.ping.create({
+                data: {
+                    message,
+                    postId,
+                    userId
+                }
+            });
+            return res.status(200).json({
+                message: "pinged sucessfully",
+                ping
+            });
+        }
     }
     catch (error) {
         res.status(411).json({

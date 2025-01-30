@@ -16,6 +16,7 @@ datasource db {
 model User{
   id String @id @default(uuid())
   name String
+  gender String
   email String @unique
   password String
   phone_number String? @unique
@@ -28,6 +29,8 @@ model Listing{
   title String
   description String
   images String
+  rent Int
+  prefered_gender String?
   address String
   location_city String
   createdAt DateTime @default(now())
@@ -46,3 +49,5 @@ model Ping{
   post Listing @relation(fields: [postId] , references: [id])
   user User @relation(fields: [userId] , references: [id])
 }
+
+
