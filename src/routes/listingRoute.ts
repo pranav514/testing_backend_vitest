@@ -9,7 +9,7 @@ router.post(
   authMiddleware,
   async (req, res): Promise<any> => {
     try {
-      const { title, description, images, address, location_city }: any =
+      const { title, description, images,rent ,prefered_gender,  address, location_city }: any =
         req.body;
       const userId = req.userId;
       if (!title || !description || !address || !location_city) {
@@ -23,6 +23,8 @@ router.post(
           title: title,
           description: description,
           images: images,
+          rent : Number(rent),
+          prefered_gender,
           address: address,
           location_city: location_city,
           userId: userId,
@@ -42,12 +44,13 @@ router.post(
 
 router.put("/update/:id", authMiddleware, async (req, res): Promise<any> => {
   try {
-    const { title, description, images, address, location_city } = req.body;
+    const { title, description, images, rent,prefered_gender,address, location_city } = req.body;
     const listingId = req.params.id;
     const userId = req.userId;
+    
     console.log(listingId);
     console.log(userId);
-    const user = await prisma.listing.update({
+    const listing = await prisma.listing.update({
       where: {
         id: listingId,
         userId: userId,
@@ -56,10 +59,13 @@ router.put("/update/:id", authMiddleware, async (req, res): Promise<any> => {
         title,
         description,
         images,
+        ...(rent !== undefined ? { rent: Number(rent) } : {}),
+        prefered_gender,
         address,
         location_city,
       },
     });
+    console.log(listing)
     return res.status(200).json({
       message: "listing updated succesfully",
     });

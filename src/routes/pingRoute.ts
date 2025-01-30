@@ -10,7 +10,43 @@ router.post('/createping/:id' ,authMiddleware, async(req , res) : Promise<any> =
         const {message} = req.body;
         const postId = req.params.id
         const userId = req.userId
-        const ping = await prisma.ping.create({
+        const listing = await prisma.listing.findUnique({
+            where : {
+                id  : postId
+            },
+            select : {
+                prefered_gender : true,
+            }
+        })
+        if(listing?.prefered_gender){
+            const user = await prisma.user.findUnique({
+                where : {
+                    id : userId
+                },
+                select : {
+                    gender : true,
+                }
+            })
+            if(user?.gender == listing.prefered_gender){
+                const ping = await prisma.ping.create({
+                    data : {
+                        message,
+                        postId,
+                        userId
+                    }
+                })
+                return res.status(200).json({
+                    message : "pinged sucessfully",
+                    ping
+                })
+                
+            }
+            return res.status(422).json({
+                message : `${user?.gender} is not prefered for the following room`
+            })
+            
+        }else{
+            const ping = await prisma.ping.create({
             data : {
                 message,
                 postId,
@@ -21,6 +57,9 @@ router.post('/createping/:id' ,authMiddleware, async(req , res) : Promise<any> =
             message : "pinged sucessfully",
             ping
         })
+        }
+
+
         
     }catch(error){
             res.status(411).json({

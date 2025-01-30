@@ -20,7 +20,7 @@ const router = express_1.default.Router();
 router.post("/auth/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("request recived");
     console.log("Received request at /api/v1/auth/signup");
-    const { name, email, password, phone_number } = req.body;
+    const { name, gender, email, password, phone_number } = req.body;
     console.log("name", name);
     console.log("email", email);
     console.log("password", password);
@@ -34,6 +34,7 @@ router.post("/auth/signup", (req, res) => __awaiter(void 0, void 0, void 0, func
         const user = yield db_1.prisma.user.create({
             data: {
                 name,
+                gender,
                 email,
                 password,
                 phone_number,

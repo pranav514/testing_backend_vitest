@@ -32,6 +32,7 @@ vitest_1.vi.mock("../middleware/authMiddleware", () => ({
     (0, vitest_1.it)("should create a user with valid data", () => __awaiter(void 0, void 0, void 0, function* () {
         const res = yield (0, supertest_1.default)(index_1.app).post("/api/v1/user/auth/signup").send({
             name: "xyz",
+            gender: "male",
             email: "xyz@gmail.com",
             password: "123456",
             phone_number: "789456123",

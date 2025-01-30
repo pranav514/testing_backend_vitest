@@ -12,6 +12,20 @@ vi.mock("../middleware/authMiddleware", () => ({
 
 vi.mock("../db", () => ({
   prisma: {
+    listing: {
+      findUnique: vi.fn(() =>
+        Promise.resolve({
+          prefered_gender: "female",  // Simulating a listing with a preferred gender
+        })
+      ),
+    },
+    user: {
+      findUnique: vi.fn(() =>
+        Promise.resolve({
+          gender: "female",  // Simulating a user with the matching gender
+        })
+      ),
+    },
     ping: {
       create: vi.fn(() =>
         Promise.resolve({
@@ -27,6 +41,7 @@ vi.mock("../db", () => ({
   },
 }));
 
+
 vi.mock("jsonwebtoken", () => ({
   sign: vi.fn(() => "mocked-jwt-token"),
 }));
@@ -38,8 +53,8 @@ describe("POST /createping", () => {
       .set("Authorization", "Bearer mock-token")
       .send({
         message: "test for the ping",
-        postId: "postId_123",
-        userId: "userId_123",
+        // postId: "postId_123",
+        // userId: "userId_123",
       });
     expect(res.statusCode).toBe(200);
   });
@@ -52,15 +67,13 @@ describe("PUT /update/:id", () => {
   it("should the listing when the valid data is provided", async () => {
     (prisma.ping.update as any).mockResolvedValue({
       id: "ping_456",
-        message : "ping updated",
-        
-
+      message: "ping updated",
     });
     const res = await request(app)
       .put("/api/v1/ping/update/ping_456")
       .set("Authorization", "Bearer mock-token")
       .send({
-        message : "ping updated",
+        message: "ping updated",
       });
     expect(res.statusCode).toBe(200);
   });
