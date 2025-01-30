@@ -24,6 +24,16 @@ vitest_1.vi.mock("../middleware/authMiddleware", () => ({
 }));
 vitest_1.vi.mock("../db", () => ({
     prisma: {
+        listing: {
+            findUnique: vitest_1.vi.fn(() => Promise.resolve({
+                prefered_gender: "female",
+            })),
+        },
+        user: {
+            findUnique: vitest_1.vi.fn(() => Promise.resolve({
+                gender: "female",
+            })),
+        },
         ping: {
             create: vitest_1.vi.fn(() => Promise.resolve({
                 id: "ping_123",
@@ -46,8 +56,6 @@ vitest_1.vi.mock("jsonwebtoken", () => ({
             .set("Authorization", "Bearer mock-token")
             .send({
             message: "test for the ping",
-            postId: "postId_123",
-            userId: "userId_123",
         });
         (0, vitest_1.expect)(res.statusCode).toBe(200);
     }));

@@ -100,7 +100,12 @@ router.delete("/delete/:id", authMiddleware_1.authMiddleware, (req, res) => __aw
 }));
 router.get("/getall", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
         const listing = yield db_1.prisma.listing.findMany({
+            skip: skip,
+            take: limit,
             include: {
                 user: {
                     select: {
@@ -118,9 +123,17 @@ router.get("/getall", (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 }
             },
         });
+        const totalCount = yield db_1.prisma.listing.count();
+        const totalPage = Math.ceil(totalCount / limit);
         return res.status(200).json({
             message: "all listings fetched successfully",
             listing,
+            pagination: {
+                currentPage: page,
+                totalPage: totalPage,
+                totalItems: totalCount,
+                itemsPerPage: limit
+            }
         });
     }
     catch (error) {
