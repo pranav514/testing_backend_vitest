@@ -1,7 +1,6 @@
 import express from "express";
 import { prisma } from "../db";
 import { authMiddleware } from "../middleware/authMiddleware";
-import { isTemplateLiteralTypeNode } from "typescript";
 const router = express.Router();
 
 router.post(

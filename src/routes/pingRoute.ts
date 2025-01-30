@@ -1,7 +1,6 @@
 import express from "express"
 import {prisma } from "../db"
 import { authMiddleware } from "../middleware/authMiddleware";
-import { C } from "vitest/dist/chunks/reporters.0x019-V2";
 const router = express.Router();
 
 
