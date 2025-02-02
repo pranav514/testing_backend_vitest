@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "vitest"
+    "build" : "tsc -b",
+    "test": "vitest",
+    "dev" : "tsc -b && node dist/bin.js"
   },
   "keywords": [],
   "author": "",
