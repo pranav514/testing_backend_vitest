@@ -13,9 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const db_1 = require("../db");
 const jsonwebtoken_1 = require("jsonwebtoken");
 const authMiddleware_1 = require("../middleware/authMiddleware");
+const auth_1 = require("../repositories/auth");
 const router = express_1.default.Router();
 router.post("/auth/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("request recived");
@@ -31,17 +31,16 @@ router.post("/auth/signup", (req, res) => __awaiter(void 0, void 0, void 0, func
         });
     }
     try {
-        const user = yield db_1.prisma.user.create({
-            data: {
-                name,
-                gender,
-                email,
-                password,
-                phone_number,
-            },
+        const user = yield (0, auth_1.create)({
+            name,
+            gender,
+            email,
+            password,
+            phone_number,
         });
         res.status(200).json({
             message: "user created successfully",
+            user,
         });
     }
     catch (error) {
@@ -51,13 +50,9 @@ router.post("/auth/signup", (req, res) => __awaiter(void 0, void 0, void 0, func
         });
     }
 }));
-router.post('/auth/signin', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/auth/signin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
-    const user = yield db_1.prisma.user.findUnique({
-        where: {
-            email: email
-        }
-    });
+    const user = yield (0, auth_1.findUnique)(email);
     console.log(user);
     if (!user) {
         return res.status(411).json({
@@ -66,42 +61,33 @@ router.post('/auth/signin', (req, res) => __awaiter(void 0, void 0, void 0, func
     }
     if (user.password != password) {
         return res.status(411).json({
-            message: "incorrect password"
+            message: "incorrect password",
         });
     }
     const token = (0, jsonwebtoken_1.sign)(user.id, "secret");
     return res.status(200).json({
         message: "user logged in sucessfully",
-        token
+        token,
     });
 }));
-router.put('/update', authMiddleware_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.put("/update", authMiddleware_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, password, phone_number } = req.body;
         const userId = req.userId;
         if (!userId) {
             return res.status(411).json({
-                message: "userId is not present"
+                message: "userId is not present",
             });
         }
-        const user = yield db_1.prisma.user.update({
-            where: {
-                id: userId
-            },
-            data: {
-                name,
-                password,
-                phone_number
-            }
-        });
+        const user = yield (0, auth_1.Update)({ name, password, phone_number, userId });
         return res.status(200).json({
             message: "user updated Sucessfully",
-            user
+            user,
         });
     }
     catch (error) {
         res.status(411).json({
-            message: "error while updating the user"
+            message: "error while updating the user",
         });
     }
 }));

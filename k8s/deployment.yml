@@ -20,7 +20,7 @@ spec:
             - containerPort: 3000
           env:
             - name: DATABASE_URL
-              value: ""
+              value: "postgresql://neondb_owner:npg_bwL4OdvAifc6@ep-cold-unit-a84yyr2y.eastus2.azure.neon.tech/neondb?sslmode=require"
 ---
 apiVersion: v1
 kind: Service
