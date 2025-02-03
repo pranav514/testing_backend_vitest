@@ -9,7 +9,7 @@ import {
   getAll,
   Update,
 } from "../repositories/listing";
-import { CreateListing, DeleteListing, GetAll, UpdateListings } from "../services/lisiting";
+import { CreateListing, DeleteListing, GetAll, GetUserSpecific, UpdateListings } from "../services/lisiting";
 const router = express.Router();
 
 router.post(
@@ -144,24 +144,20 @@ router.get(
 );
 
 router.get("/userlisting", authMiddleware, async (req, res): Promise<any> => {
-  try {
+  
     const userId = req.userId;
-    console.log("userId", userId);
-    const listing = await prisma.listing.findMany({
-      where: {
-        userId: userId,
-      },
-    });
-    console.log(listing);
+    const specificListing = await GetUserSpecific(userId);
+    if(specificListing.status === 411){
+      return res.status(specificListing.status).json({
+        message : specificListing.message
+      })
+    }
     return res.status(200).json({
-      message: `fetched the blog of the user ${userId}`,
-      listing,
-    });
-  } catch (error) {
-    res.status(411).json({
-      message: "cannot fetched the blog",
-    });
-  }
+      message : specificListing.message,
+      listing : specificListing.listing
+    })
+  
+  
 });
 
 export default router;
