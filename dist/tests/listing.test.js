@@ -62,7 +62,7 @@ vitest_1.vi.mock("jsonwebtoken", () => ({
         (0, vitest_1.expect)(res.statusCode).toBe(200);
         (0, vitest_1.expect)(res.body).toHaveProperty("message", "listing added succesfully");
     }));
-    (0, vitest_1.it)("should return 411 for missing required fields", () => __awaiter(void 0, void 0, void 0, function* () {
+    (0, vitest_1.it)("should return 402 for missing required fields", () => __awaiter(void 0, void 0, void 0, function* () {
         const res = yield (0, supertest_1.default)(index_1.app)
             .post("/api/v1/listing/createlisting")
             .set("Authorization", "Bearer mocked-jwt-token")
@@ -70,7 +70,7 @@ vitest_1.vi.mock("jsonwebtoken", () => ({
             title: "xyz",
             description: "3bhk flat, 2 room vacancies, 5000 rent",
         });
-        (0, vitest_1.expect)(res.statusCode).toBe(411);
+        (0, vitest_1.expect)(res.statusCode).toBe(402);
         (0, vitest_1.expect)(res.body).toHaveProperty("message", "some fields are missing");
     }));
 });

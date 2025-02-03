@@ -1,0 +1,106 @@
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.GetAll = exports.DeleteListing = exports.UpdateListings = exports.CreateListing = void 0;
+const listing_1 = require("../repositories/listing");
+const CreateListing = ({ title, description, images, rent, prefered_gender, address, location_city, userId }) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (!title || !description || !address || !location_city) {
+            return {
+                message: "some fields are missing",
+                status: 402
+            };
+        }
+        const lisiting = yield (0, listing_1.Create)({ title, description, images, rent, prefered_gender, address, location_city, userId });
+        return {
+            message: "listing added succesfully",
+            status: 200,
+            data: lisiting
+        };
+    }
+    catch (error) {
+        return {
+            message: "error occured while creating the listing",
+            status: 411
+        };
+    }
+});
+exports.CreateListing = CreateListing;
+const UpdateListings = ({ title, description, images, rent, prefered_gender, address, location_city, listingId, userId, }) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log(listingId);
+        console.log(userId);
+        const listing = yield (0, listing_1.Update)({
+            title,
+            description,
+            images,
+            rent,
+            prefered_gender,
+            address,
+            location_city,
+            listingId,
+            userId,
+        });
+        console.log(listing);
+        return {
+            message: "listing updated succesfully",
+            status: 200,
+        };
+    }
+    catch (error) {
+        return {
+            message: "error occured while updating the listings",
+            status: 411
+        };
+    }
+});
+exports.UpdateListings = UpdateListings;
+const DeleteListing = ({ listingId, userId }) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const listing = yield (0, listing_1.deleteListing)({ listingId, userId });
+        return {
+            message: "listing deleted succesfully",
+            status: 200,
+        };
+    }
+    catch (error) {
+        return {
+            message: "cannot delete the listing",
+            status: 411
+        };
+    }
+});
+exports.DeleteListing = DeleteListing;
+const GetAll = ({ skip, limit, page }) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const listing = yield (0, listing_1.getAll)({ skip, limit });
+        const totalCount = yield (0, listing_1.Count)();
+        const totalPage = Math.ceil(totalCount / limit);
+        return {
+            message: "all listings fetched successfully",
+            status: 200,
+            listing: listing,
+            pagination: {
+                currentPage: page,
+                totalPage: totalPage,
+                totalItems: totalCount,
+                itemsPerPage: limit
+            }
+        };
+    }
+    catch (error) {
+        return {
+            message: "cannot fetched all the blogs",
+            status: 411
+        };
+    }
+});
+exports.GetAll = GetAll;

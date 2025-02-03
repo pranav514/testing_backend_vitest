@@ -60,7 +60,7 @@ describe("POST /signin", () => {
     expect(res.body).toHaveProperty("token", "mocked-jwt-token");
   });
 
-  it("should return 411 if user does not exist", async () => {
+  it("should return 402 if user does not exist", async () => {
     (prisma.user.findUnique as any).mockResolvedValue(null);
 
     const res = await request(app).post("/api/v1/user/auth/signin").send({
@@ -68,7 +68,7 @@ describe("POST /signin", () => {
       password: "123456",
     });
 
-    expect(res.statusCode).toBe(411);
+    expect(res.statusCode).toBe(402);
     expect(res.body).toHaveProperty("message", "no user exist cannot login");
   });
 

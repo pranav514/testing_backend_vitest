@@ -56,7 +56,7 @@ describe("POST /createlisting", () => {
     expect(res.body).toHaveProperty("message", "listing added succesfully");
   });
 
-  it("should return 411 for missing required fields", async () => {
+  it("should return 402 for missing required fields", async () => {
     const res = await request(app)
       .post("/api/v1/listing/createlisting")
       .set("Authorization", "Bearer mocked-jwt-token")
@@ -65,7 +65,7 @@ describe("POST /createlisting", () => {
         description: "3bhk flat, 2 room vacancies, 5000 rent",
       });
 
-    expect(res.statusCode).toBe(411);
+    expect(res.statusCode).toBe(402);
     expect(res.body).toHaveProperty("message", "some fields are missing");
   });
 });

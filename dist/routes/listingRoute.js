@@ -15,151 +15,92 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const db_1 = require("../db");
 const authMiddleware_1 = require("../middleware/authMiddleware");
+const listing_1 = require("../repositories/listing");
+const lisiting_1 = require("../services/lisiting");
 const router = express_1.default.Router();
 router.post("/createlisting", authMiddleware_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { title, description, images, rent, prefered_gender, address, location_city } = req.body;
-        const userId = req.userId;
-        if (!title || !description || !address || !location_city) {
-            return res.status(411).json({
-                message: "some fields are missing",
-            });
-        }
-        console.log(title);
-        const lisiting = yield db_1.prisma.listing.create({
-            data: {
-                title: title,
-                description: description,
-                images: images,
-                rent: Number(rent),
-                prefered_gender,
-                address: address,
-                location_city: location_city,
-                userId: userId,
-            },
-        });
-        return res.status(200).json({
-            message: "listing added succesfully",
-            lisiting,
+    const { title, description, images, rent, prefered_gender, address, location_city, } = req.body;
+    const userId = req.userId;
+    const listing = yield (0, lisiting_1.CreateListing)({
+        title,
+        description,
+        images,
+        rent,
+        prefered_gender,
+        address,
+        location_city,
+        userId,
+    });
+    if (listing.status === 402) {
+        return res.status(listing.status).json({
+            message: listing.message,
         });
     }
-    catch (error) {
-        return res.status(411).json({
-            message: "error occured while creating the listing",
+    if (listing.status === 411) {
+        return res.status(listing.status).json({
+            message: listing.message,
         });
     }
+    return res.status(listing.status).json({
+        message: listing.message,
+        listing: listing.data,
+    });
 }));
 router.put("/update/:id", authMiddleware_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { title, description, images, rent, prefered_gender, address, location_city } = req.body;
-        const listingId = req.params.id;
-        const userId = req.userId;
-        console.log(listingId);
-        console.log(userId);
-        const listing = yield db_1.prisma.listing.update({
-            where: {
-                id: listingId,
-                userId: userId,
-            },
-            data: Object.assign(Object.assign({ title,
-                description,
-                images }, (rent !== undefined ? { rent: Number(rent) } : {})), { prefered_gender,
-                address,
-                location_city }),
-        });
-        console.log(listing);
-        return res.status(200).json({
-            message: "listing updated succesfully",
+    const { title, description, images, rent, prefered_gender, address, location_city, } = req.body;
+    const listingId = req.params.id;
+    const userId = req.userId;
+    const updateListing = yield (0, lisiting_1.UpdateListings)({ title,
+        description,
+        images,
+        rent,
+        prefered_gender,
+        address,
+        location_city,
+        listingId,
+        userId });
+    if (updateListing.status === 411) {
+        return res.status(updateListing.status).json({
+            message: updateListing.message
         });
     }
-    catch (error) {
-        res.status(411).json({
-            message: "error occured while updating the listings",
-        });
-    }
+    return res.status(updateListing.status).json({
+        message: updateListing.message
+    });
 }));
 router.delete("/delete/:id", authMiddleware_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const listingId = req.params.id;
-        const userId = req.userId;
-        const listing = yield db_1.prisma.listing.delete({
-            where: {
-                id: listingId,
-                userId: userId,
-            },
-        });
-        return res.status(200).json({
-            message: "listing deleted succesfully",
+    const listingId = req.params.id;
+    const userId = req.userId;
+    const deleteListing = yield (0, lisiting_1.DeleteListing)({ listingId, userId });
+    if (deleteListing.status === 411) {
+        return res.status(deleteListing.status).json({
+            message: "cannot delete the listing"
         });
     }
-    catch (error) {
-        return res.status(411).json({
-            message: "cannot delete the listing",
-        });
-    }
+    return res.status(200).json({
+        message: "listing deleted succesfully"
+    });
 }));
 router.get("/getall", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const page = Number(req.query.page) || 1;
-        const limit = Number(req.query.limit) || 10;
-        const skip = (page - 1) * limit;
-        const listing = yield db_1.prisma.listing.findMany({
-            skip: skip,
-            take: limit,
-            include: {
-                user: {
-                    select: {
-                        name: true,
-                        email: true,
-                        phone_number: true,
-                    },
-                },
-                pings: {
-                    select: {
-                        message: true,
-                        userId: true,
-                        createdAt: true,
-                    }
-                }
-            },
-        });
-        const totalCount = yield db_1.prisma.listing.count();
-        const totalPage = Math.ceil(totalCount / limit);
-        return res.status(200).json({
-            message: "all listings fetched successfully",
-            listing,
-            pagination: {
-                currentPage: page,
-                totalPage: totalPage,
-                totalItems: totalCount,
-                itemsPerPage: limit
-            }
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const listings = yield (0, lisiting_1.GetAll)({ skip, limit, page });
+    if (listings.status === 411) {
+        return res.status(listings.status).json({
+            message: listings.message
         });
     }
-    catch (error) {
-        return res.status(411).json({
-            message: "cannot fetched all the blogs",
-        });
-    }
+    return res.status(listings.status).json({
+        message: listings.message,
+        listings: listings.listing,
+        pagination: listings.pagination
+    });
 }));
 router.get("/getlisting/:id", authMiddleware_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const listingId = req.params.id;
-        //   console.log(listingId);
-        const listing = yield db_1.prisma.listing.findUnique({
-            where: {
-                id: listingId,
-            },
-            include: {
-                user: {
-                    select: {
-                        name: true,
-                        email: true,
-                        phone_number: true,
-                    },
-                },
-            },
-        });
+        const listing = yield (0, listing_1.findUnique)(listingId);
         console.log(listing);
         return res.status(200).json({
             message: "fetched the specific listing",
@@ -172,24 +113,24 @@ router.get("/getlisting/:id", authMiddleware_1.authMiddleware, (req, res) => __a
         });
     }
 }));
-router.get('/userlisting', authMiddleware_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/userlisting", authMiddleware_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = req.userId;
-        console.log('userId', userId);
+        console.log("userId", userId);
         const listing = yield db_1.prisma.listing.findMany({
             where: {
-                userId: userId
-            }
+                userId: userId,
+            },
         });
         console.log(listing);
         return res.status(200).json({
             message: `fetched the blog of the user ${userId}`,
-            listing
+            listing,
         });
     }
     catch (error) {
         res.status(411).json({
-            message: "cannot fetched the blog"
+            message: "cannot fetched the blog",
         });
     }
 }));

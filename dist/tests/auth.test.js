@@ -62,13 +62,13 @@ vitest_1.vi.mock("../middleware/authMiddleware", () => ({
         (0, vitest_1.expect)(res.body).toHaveProperty("message", "user logged in sucessfully");
         (0, vitest_1.expect)(res.body).toHaveProperty("token", "mocked-jwt-token");
     }));
-    (0, vitest_1.it)("should return 411 if user does not exist", () => __awaiter(void 0, void 0, void 0, function* () {
+    (0, vitest_1.it)("should return 402 if user does not exist", () => __awaiter(void 0, void 0, void 0, function* () {
         db_1.prisma.user.findUnique.mockResolvedValue(null);
         const res = yield (0, supertest_1.default)(index_1.app).post("/api/v1/user/auth/signin").send({
             email: "notfound@gmail.com",
             password: "123456",
         });
-        (0, vitest_1.expect)(res.statusCode).toBe(411);
+        (0, vitest_1.expect)(res.statusCode).toBe(402);
         (0, vitest_1.expect)(res.body).toHaveProperty("message", "no user exist cannot login");
     }));
     (0, vitest_1.it)("should return 411 for incorrect password", () => __awaiter(void 0, void 0, void 0, function* () {
