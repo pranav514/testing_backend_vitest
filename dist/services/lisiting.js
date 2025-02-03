@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetAll = exports.DeleteListing = exports.UpdateListings = exports.CreateListing = void 0;
+exports.GetUserSpecific = exports.GetAll = exports.DeleteListing = exports.UpdateListings = exports.CreateListing = void 0;
 const listing_1 = require("../repositories/listing");
 const CreateListing = ({ title, description, images, rent, prefered_gender, address, location_city, userId }) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -104,3 +104,22 @@ const GetAll = ({ skip, limit, page }) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports.GetAll = GetAll;
+const GetUserSpecific = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("userId", userId);
+        const listing = yield (0, listing_1.findMany)(userId);
+        console.log(listing);
+        return {
+            message: `fetched the blog of the user ${userId}`,
+            status: 200,
+            listing
+        };
+    }
+    catch (error) {
+        return {
+            message: "cannot fetched the blog",
+            status: 411,
+        };
+    }
+});
+exports.GetUserSpecific = GetUserSpecific;
