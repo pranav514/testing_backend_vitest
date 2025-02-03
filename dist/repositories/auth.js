@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Update = exports.findUnique = exports.create = void 0;
+exports.findUniqueUser = exports.Update = exports.findUnique = exports.create = void 0;
 const db_1 = require("../db");
 const create = ({ name, gender, email, password, phone_number }) => __awaiter(void 0, void 0, void 0, function* () {
     const User = yield db_1.prisma.user.create({
@@ -47,3 +47,15 @@ const Update = ({ name, password, phone_number, userId }) => __awaiter(void 0, v
     return user;
 });
 exports.Update = Update;
+const findUniqueUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield db_1.prisma.user.findUnique({
+        where: {
+            id: userId
+        },
+        select: {
+            gender: true
+        }
+    });
+    return user;
+});
+exports.findUniqueUser = findUniqueUser;

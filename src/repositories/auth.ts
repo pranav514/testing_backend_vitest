@@ -41,3 +41,16 @@ export const Update  = async({name, password, phone_number , userId} : UserUpdat
     })
     return user
 }
+
+export const findUniqueUser = async (userId : string)  => {
+    const user = await prisma.user.findUnique({
+        where : {
+            id : userId
+        },
+        select : {
+            gender  : true
+        }
+    })
+    return user
+}
+

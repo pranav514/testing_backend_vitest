@@ -13,39 +13,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const db_1 = require("../db");
 const authMiddleware_1 = require("../middleware/authMiddleware");
+const ping_1 = require("../repositories/ping");
+const listing_1 = require("../repositories/listing");
+const auth_1 = require("../repositories/auth");
 const router = express_1.default.Router();
 router.post('/createping/:id', authMiddleware_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { message } = req.body;
         const postId = req.params.id;
         const userId = req.userId;
-        const listing = yield db_1.prisma.listing.findUnique({
-            where: {
-                id: postId
-            },
-            select: {
-                prefered_gender: true,
-            }
-        });
+        const listing = yield (0, listing_1.findUniqueListing)(postId);
         if (listing === null || listing === void 0 ? void 0 : listing.prefered_gender) {
-            const user = yield db_1.prisma.user.findUnique({
-                where: {
-                    id: userId
-                },
-                select: {
-                    gender: true,
-                }
-            });
+            const user = yield (0, auth_1.findUniqueUser)(userId);
             if ((user === null || user === void 0 ? void 0 : user.gender) == listing.prefered_gender) {
-                const ping = yield db_1.prisma.ping.create({
-                    data: {
-                        message,
-                        postId,
-                        userId
-                    }
-                });
+                const ping = yield (0, ping_1.Create)({ message, postId, userId });
                 return res.status(200).json({
                     message: "pinged sucessfully",
                     ping
@@ -56,13 +38,7 @@ router.post('/createping/:id', authMiddleware_1.authMiddleware, (req, res) => __
             });
         }
         else {
-            const ping = yield db_1.prisma.ping.create({
-                data: {
-                    message,
-                    postId,
-                    userId
-                }
-            });
+            const ping = yield (0, ping_1.Create)({ message, postId, userId });
             return res.status(200).json({
                 message: "pinged sucessfully",
                 ping
@@ -79,15 +55,8 @@ router.put('/update/:id', authMiddleware_1.authMiddleware, (req, res) => __await
     try {
         const { message } = req.body;
         const pingId = req.params.id;
-        const ping = yield db_1.prisma.ping.update({
-            where: {
-                id: pingId,
-                userId: req.userId
-            },
-            data: {
-                message: message
-            }
-        });
+        const userId = req.userId;
+        const ping = yield (0, ping_1.Update)({ message, pingId, userId });
         return res.status(200).json({
             message: "ping updated"
         });
@@ -101,11 +70,7 @@ router.put('/update/:id', authMiddleware_1.authMiddleware, (req, res) => __await
 router.get('/userpings', authMiddleware_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = req.userId;
-        const pings = yield db_1.prisma.ping.findMany({
-            where: {
-                userId: userId
-            }
-        });
+        const pings = yield (0, ping_1.findMany)(userId);
         return res.status(200).json({
             message: "fetched the pings succesfully of the user ",
             pings

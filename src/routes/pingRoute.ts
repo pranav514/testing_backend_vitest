@@ -1,6 +1,9 @@
 import express from "express"
 import {prisma } from "../db"
 import { authMiddleware } from "../middleware/authMiddleware";
+import { Create, findMany, Update} from "../repositories/ping";
+import { findUniqueListing } from "../repositories/listing";
+import { findUniqueUser } from "../repositories/auth";
 const router = express.Router();
 
 
@@ -9,31 +12,11 @@ router.post('/createping/:id' ,authMiddleware, async(req , res) : Promise<any> =
         const {message} = req.body;
         const postId = req.params.id
         const userId = req.userId
-        const listing = await prisma.listing.findUnique({
-            where : {
-                id  : postId
-            },
-            select : {
-                prefered_gender : true,
-            }
-        })
+        const listing = await findUniqueListing(postId)
         if(listing?.prefered_gender){
-            const user = await prisma.user.findUnique({
-                where : {
-                    id : userId
-                },
-                select : {
-                    gender : true,
-                }
-            })
+            const user = await findUniqueUser(userId)
             if(user?.gender == listing.prefered_gender){
-                const ping = await prisma.ping.create({
-                    data : {
-                        message,
-                        postId,
-                        userId
-                    }
-                })
+                const ping = await Create({message ,postId,userId})
                 return res.status(200).json({
                     message : "pinged sucessfully",
                     ping
@@ -45,13 +28,7 @@ router.post('/createping/:id' ,authMiddleware, async(req , res) : Promise<any> =
             })
             
         }else{
-            const ping = await prisma.ping.create({
-            data : {
-                message,
-                postId,
-                userId
-            }
-        })
+            const ping = await Create({message ,postId,userId})
         return res.status(200).json({
             message : "pinged sucessfully",
             ping
@@ -72,15 +49,8 @@ router.put('/update/:id' ,authMiddleware, async(req , res) : Promise<any> => {
     try{
         const {message} = req.body;
         const pingId = req.params.id
-        const ping = await prisma.ping.update({
-         where : {
-            id : pingId,
-            userId : req.userId
-         },
-         data  :{
-            message : message
-         }
-        })
+        const userId = req.userId
+        const ping = await Update({message , pingId , userId})
         return res.status(200).json({
             message : "ping updated"
         })
@@ -94,11 +64,7 @@ router.put('/update/:id' ,authMiddleware, async(req , res) : Promise<any> => {
 router.get('/userpings' , authMiddleware,async ( req ,res) : Promise<any>  => {
     try{
         const userId = req.userId;
-        const pings = await prisma.ping.findMany({
-            where : {
-                userId : userId
-            }
-        })
+        const pings = await findMany(userId)
         return res.status(200).json({
             message : "fetched the pings succesfully of the user ",
             pings
