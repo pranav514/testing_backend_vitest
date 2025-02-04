@@ -15,71 +15,56 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const authMiddleware_1 = require("../middleware/authMiddleware");
 const ping_1 = require("../repositories/ping");
-const listing_1 = require("../repositories/listing");
-const auth_1 = require("../repositories/auth");
+const ping_2 = require("../services/ping");
 const router = express_1.default.Router();
 router.post('/createping/:id', authMiddleware_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { message } = req.body;
-        const postId = req.params.id;
-        const userId = req.userId;
-        const listing = yield (0, listing_1.findUniqueListing)(postId);
-        if (listing === null || listing === void 0 ? void 0 : listing.prefered_gender) {
-            const user = yield (0, auth_1.findUniqueUser)(userId);
-            if ((user === null || user === void 0 ? void 0 : user.gender) == listing.prefered_gender) {
-                const ping = yield (0, ping_1.Create)({ message, postId, userId });
-                return res.status(200).json({
-                    message: "pinged sucessfully",
-                    ping
-                });
-            }
-            return res.status(422).json({
-                message: `${user === null || user === void 0 ? void 0 : user.gender} is not prefered for the following room`
-            });
-        }
-        else {
-            const ping = yield (0, ping_1.Create)({ message, postId, userId });
-            return res.status(200).json({
-                message: "pinged sucessfully",
-                ping
-            });
-        }
-    }
-    catch (error) {
-        res.status(411).json({
-            message: "ping not succesfull"
+    const { message } = req.body;
+    const postId = req.params.id;
+    const userId = req.userId;
+    const ping = yield (0, ping_2.CreatePing)({ message, postId, userId });
+    if (ping.status == 422) {
+        return res.status(ping.status).json({
+            message: ping.message
         });
     }
+    if (ping.status == 411) {
+        return res.status(ping.status).json({
+            message: ping.message
+        });
+    }
+    return res.status(200).json({
+        message: ping.message,
+        ping: ping.ping
+    });
 }));
 router.put('/update/:id', authMiddleware_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { message } = req.body;
-        const pingId = req.params.id;
-        const userId = req.userId;
-        const ping = yield (0, ping_1.Update)({ message, pingId, userId });
-        return res.status(200).json({
-            message: "ping updated"
+    const { message } = req.body;
+    const postId = req.params.id;
+    const userId = req.userId;
+    console.log(postId);
+    console.log(userId);
+    const updatePing = yield (0, ping_2.UpdatePing)({ message, postId, userId });
+    if (updatePing.status === 411) {
+        return res.status(updatePing.status).json({
+            message: updatePing.message
         });
     }
-    catch (error) {
-        return res.status(411).json({
-            message: "cannot update the ping"
-        });
-    }
+    return res.status(updatePing.status).json({
+        message: updatePing.message
+    });
 }));
 router.get('/userpings', authMiddleware_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const userId = req.userId;
-        const pings = yield (0, ping_1.findMany)(userId);
-        return res.status(200).json({
-            message: "fetched the pings succesfully of the user ",
-            pings
+    const userId = req.userId;
+    const pings = yield (0, ping_1.findMany)(userId);
+    const userPing = yield (0, ping_2.UserPing)(userId);
+    if (userPing.status === 411) {
+        return res.status(userPing.status).json({
+            message: userPing.message,
         });
     }
-    catch (error) {
-        return res.status(411).json({
-            message: "cannot fetched the ping of the user"
-        });
-    }
+    return res.status(userPing.status).json({
+        message: userPing.message,
+        pings: userPing.pings
+    });
 }));
 exports.default = router;
