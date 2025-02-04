@@ -16,35 +16,9 @@ const express_1 = __importDefault(require("express"));
 const authMiddleware_1 = require("../middleware/authMiddleware");
 const listing_1 = require("../repositories/listing");
 const lisiting_1 = require("../services/lisiting");
+const listing_2 = require("../controllers/listing");
 const router = express_1.default.Router();
-router.post("/createlisting", authMiddleware_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { title, description, images, rent, prefered_gender, address, location_city, } = req.body;
-    const userId = req.userId;
-    const listing = yield (0, lisiting_1.CreateListing)({
-        title,
-        description,
-        images,
-        rent,
-        prefered_gender,
-        address,
-        location_city,
-        userId,
-    });
-    if (listing.status === 402) {
-        return res.status(listing.status).json({
-            message: listing.message,
-        });
-    }
-    if (listing.status === 411) {
-        return res.status(listing.status).json({
-            message: listing.message,
-        });
-    }
-    return res.status(listing.status).json({
-        message: listing.message,
-        listing: listing.data,
-    });
-}));
+router.post("/createlisting", authMiddleware_1.authMiddleware, listing_2.createlisting);
 router.put("/update/:id", authMiddleware_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, description, images, rent, prefered_gender, address, location_city, } = req.body;
     const listingId = req.params.id;

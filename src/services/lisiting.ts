@@ -1,6 +1,6 @@
 import { any } from "vitest-mock-extended";
 import { CreateListing as CreateListingInterface, Pagination, UpdateListing } from "../interface/listingInterface";
-import { Count, Create, deleteListing, findMany, getAll, Update } from "../repositories/listing";
+import { Count, Create, deleteListing, findMany, findUnique, getAll, Update } from "../repositories/listing";
 
 export const CreateListing = async ({title , description, images , rent , prefered_gender , address , location_city , userId} : CreateListingInterface) => {
     try {
@@ -103,6 +103,23 @@ export const GetAll = async({skip , limit , page} :any ) => {
         return {
             message : "cannot fetched all the blogs",
             status : 411
+        }
+      }
+}
+
+export const SpecificListing  = async(listingId : string) => {
+  try {
+        const listing = await findUnique(listingId);
+        console.log(listing);
+        return {
+          message : "fetched the specific listing",
+          status : 200,
+          listing
+        }
+      } catch (error) {
+        return {
+          message : "cannot fetched the listing",
+          status  : 411,
         }
       }
 }
