@@ -11,16 +11,20 @@ export const Create = async ({message , postId , userId}  : any) => {
         return ping
 }
 
-export const Update = async ({message , pingId , userId} : any) => {
+export const Update = async ({message , postId , userId} : any) => {
+    console.log(message);
+    console.log(postId)
+    console.log(userId)
     const ping = await prisma.ping.update({
         where : {
-           id : pingId,
+           id : postId,
            userId : userId
         },
         data  :{
            message : message
         }
        })
+       console.log(ping);
        return ping
 }
 

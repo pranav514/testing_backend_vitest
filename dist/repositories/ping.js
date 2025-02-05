@@ -22,16 +22,20 @@ const Create = ({ message, postId, userId }) => __awaiter(void 0, void 0, void 0
     return ping;
 });
 exports.Create = Create;
-const Update = ({ message, pingId, userId }) => __awaiter(void 0, void 0, void 0, function* () {
+const Update = ({ message, postId, userId }) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(message);
+    console.log(postId);
+    console.log(userId);
     const ping = yield db_1.prisma.ping.update({
         where: {
-            id: pingId,
+            id: postId,
             userId: userId
         },
         data: {
             message: message
         }
     });
+    console.log(ping);
     return ping;
 });
 exports.Update = Update;
