@@ -1,6 +1,7 @@
 import { any } from "vitest-mock-extended";
 import { CreateListing as CreateListingInterface, Pagination, UpdateListing } from "../interface/listingInterface";
 import { Count, Create, deleteListing, findMany, findUnique, getAll, Update } from "../repositories/listing";
+import { redisclient } from "../db";
 
 export const CreateListing = async ({title , description, images , rent , prefered_gender , address , location_city , userId} : CreateListingInterface) => {
     try {
@@ -83,21 +84,32 @@ export const DeleteListing = async ({listingId , userId} : any) => {
 
 export const GetAll = async({skip , limit , page} :any ) => {
     try {
-
-    
+        const key = `listings:skip=${skip}:limit=${limit}`
+        const cachedData = await redisclient.get(key);
+        if(cachedData){
+          return {
+            message : "fetched from the cached succesfully",
+            status : 200,
+            ...JSON.parse(cachedData)
+          }
+        }
         const listing = await getAll({ skip, limit });
         const totalCount = await Count();
         const totalPage = Math.ceil(totalCount / limit);
+        const responseData = {
+          listing : listing,
+          pagination : {
+            currentPage: page,
+            totalPage: totalPage,
+            totalItems: totalCount,
+            itemsPerPage: limit
+          }
+        }
+        await redisclient.setEx(key , 3600 , JSON.stringify(responseData));
         return {
             message : "all listings fetched successfully",
             status : 200,
-            listing : listing,
-            pagination : {
-                currentPage: page,
-                totalPage: totalPage,
-                totalItems: totalCount,
-                itemsPerPage: limit
-            }
+            ...responseData
         }
       } catch (error) {
         return {
