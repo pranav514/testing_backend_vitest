@@ -20,17 +20,8 @@ spec:
             - containerPort: 3000
           env:
             - name: DATABASE_URL
-              value: ""
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: express-service
-spec:
-  selector:
-    app: express-backend
-  ports:
-    - protocol: TCP
-      port: 3000
-      targetPort: 3000
-  type: NodePort
+              valueFrom:
+                configMapKeyRef:
+                  name : backend-config
+                  key : DATABASE_URL
+

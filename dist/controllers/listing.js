@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createlisting = void 0;
+exports.specificlisting = exports.getlisting = exports.deletelisting = exports.updatelisting = exports.createlisting = void 0;
 const lisiting_1 = require("../services/lisiting");
 const createlisting = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, description, images, rent, prefered_gender, address, location_city, } = req.body;
@@ -40,3 +40,71 @@ const createlisting = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     });
 });
 exports.createlisting = createlisting;
+const updatelisting = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { title, description, images, rent, prefered_gender, address, location_city, } = req.body;
+    const listingId = req.params.id;
+    const userId = req.userId;
+    const updateListing = yield (0, lisiting_1.UpdateListings)({ title,
+        description,
+        images,
+        rent,
+        prefered_gender,
+        address,
+        location_city,
+        listingId,
+        userId });
+    if (updateListing.status === 411) {
+        return res.status(updateListing.status).json({
+            message: updateListing.message
+        });
+    }
+    return res.status(updateListing.status).json({
+        message: updateListing.message
+    });
+});
+exports.updatelisting = updatelisting;
+const deletelisting = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const listingId = req.params.id;
+    const userId = req.userId;
+    const deleteListing = yield (0, lisiting_1.DeleteListing)({ listingId, userId });
+    if (deleteListing.status === 411) {
+        return res.status(deleteListing.status).json({
+            message: "cannot delete the listing"
+        });
+    }
+    return res.status(200).json({
+        message: "listing deleted succesfully"
+    });
+});
+exports.deletelisting = deletelisting;
+const getlisting = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const listings = yield (0, lisiting_1.GetAll)({ skip, limit, page });
+    if (listings.status === 411) {
+        return res.status(listings.status).json({
+            message: listings.message
+        });
+    }
+    return res.status(listings.status).json({
+        message: listings.message,
+        listings: listings.listing,
+        pagination: listings.pagination
+    });
+});
+exports.getlisting = getlisting;
+const specificlisting = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const listingId = req.params.id;
+    const lisiting = yield (0, lisiting_1.SpecificListing)(listingId);
+    if (lisiting.status === 411) {
+        return res.status(lisiting.status).json({
+            message: lisiting.message
+        });
+    }
+    return res.status(lisiting.status).json({
+        message: lisiting.message,
+        lisiting: lisiting.listing
+    });
+});
+exports.specificlisting = specificlisting;

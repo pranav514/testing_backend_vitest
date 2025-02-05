@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: express-service
+spec:
+  selector:
+    app: express-backend
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+      # nodeport : 3000
+  type: NodePort
