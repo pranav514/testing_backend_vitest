@@ -1,7 +1,12 @@
 import { any } from "vitest-mock-extended";
-import { CreateListing as CreateListingInterface, Pagination, UpdateListing } from "../interface/listingInterface";
+import { CreateListing as CreateListingInterface, Getall, Pagination, UpdateListing } from "../interface/listingInterface";
 import { Count, Create, deleteListing, findMany, findUnique, getAll, Update } from "../repositories/listing";
 import { redisclient } from "../db";
+import { DeleteListingInterface } from "../interface/authInterface";
+
+export const avnishv = () => {
+  const hello = console.log("hello world");
+}
 
 export const CreateListing = async ({title , description, images , rent , prefered_gender , address , location_city , userId} : CreateListingInterface) => {
     try {
@@ -67,7 +72,7 @@ export const UpdateListings  = async ({title,
 }
 
 
-export const DeleteListing = async ({listingId , userId} : any) => {
+export const DeleteListing = async ({listingId , userId} : DeleteListingInterface) => {
     try{
         const listing  = await deleteListing({listingId , userId})
             return {
@@ -82,7 +87,7 @@ export const DeleteListing = async ({listingId , userId} : any) => {
     }
 }
 
-export const GetAll = async({skip , limit , page} :any ) => {
+export const GetAll = async({skip , limit , page} :Getall ) => {
     try {
         const key = `listings:skip=${skip}:limit=${limit}`
         const cachedData = await redisclient.get(key);
@@ -95,7 +100,7 @@ export const GetAll = async({skip , limit , page} :any ) => {
         }
         const listing = await getAll({ skip, limit });
         const totalCount = await Count();
-        const totalPage = Math.ceil(totalCount / limit);
+        const totalPage  = Math.ceil(totalCount / Number(limit));
         const responseData = {
           listing : listing,
           pagination : {

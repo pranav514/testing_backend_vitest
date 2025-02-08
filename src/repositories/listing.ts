@@ -2,6 +2,7 @@ import express from "express";
 import { prisma } from "../db";
 import { authMiddleware } from "../middleware/authMiddleware";
 import  {CreateListing, Pagination, UpdateListing}  from "../interface/listingInterface";
+import { DeleteListingInterface } from "../interface/authInterface";
 
 
 export const Create =async ({title , description , images , rent  , prefered_gender , address , location_city , userId} : CreateListing) => {
@@ -109,7 +110,7 @@ export const findUniqueListing = async (postId : string)  => {
     return listing
 }
 
-export const deleteListing = async ({listingId , userId} : any) => {
+export const deleteListing = async ({listingId , userId} : DeleteListingInterface) => {
     const listing = await prisma.listing.delete({
         where: {
           id: listingId,

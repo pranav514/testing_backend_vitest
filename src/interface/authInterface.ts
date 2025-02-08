@@ -12,3 +12,14 @@ export interface UserUpdate{
     phone_number  : string,
     userId : string,
 }
+
+export interface DeleteListingInterface{
+    listingId : string,
+    userId : string
+}
+
+
+export interface UserAuth{
+    email : string,
+    password : string
+}

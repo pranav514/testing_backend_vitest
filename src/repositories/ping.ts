@@ -1,6 +1,7 @@
 import { prisma } from "../db";
+import { PingCreate } from "../interface/pingInterface";
 
-export const Create = async ({message , postId , userId}  : any) => {
+export const Create = async ({message , postId , userId}  : PingCreate) => {
         const ping = await prisma.ping.create({
             data : {
                 message,
@@ -11,7 +12,7 @@ export const Create = async ({message , postId , userId}  : any) => {
         return ping
 }
 
-export const Update = async ({message , postId , userId} : any) => {
+export const Update = async ({message , postId , userId} : PingCreate) => {
     console.log(message);
     console.log(postId)
     console.log(userId)

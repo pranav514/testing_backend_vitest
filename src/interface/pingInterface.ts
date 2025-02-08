@@ -3,3 +3,9 @@ export interface Ping{
     postId : string,
     userId : string
 }
+
+export interface PingCreate{
+    message : string,
+    postId : string,
+    userId : string,
+}
