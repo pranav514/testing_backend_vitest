@@ -1,5 +1,5 @@
 import { sign } from "jsonwebtoken";
-import { User, UserUpdate } from "../interface/authInterface";
+import { User, UserAuth, UserUpdate } from "../interface/authInterface";
 import { create, findUnique, Update } from "../repositories/auth";
 
 export const CreateUser = async ({
@@ -42,7 +42,7 @@ export const CreateUser = async ({
   }
 };
 
-export const SignIn = async ({ email, password }: any) => {
+export const SignIn = async ({ email, password }: UserAuth) => {
   const user = await findUnique(email);
   console.log(user);
   if (!user) {
