@@ -2,7 +2,8 @@
 import express, { Request, Response } from "express";
 
 import { CreateListing, DeleteListing, GetAll, GetUserSpecific, SpecificListing, UpdateListings } from "../services/lisiting";
-
+import { EventEmitter } from "events";
+import { notificationEmitter } from "../eventemitter/notification";
 export const createlisting = async(req : Request , res : Response ) : Promise<any> => {
      const {
           title,
@@ -28,12 +29,15 @@ export const createlisting = async(req : Request , res : Response ) : Promise<an
           return res.status(listing.status).json({
             message: listing.message,
           });
+          
         }
-        if (listing.status === 411) {
+        if (listing.status === 411) { 
           return res.status(listing.status).json({
             message: listing.message,
           });
         }
+        console.log("from the controller")
+        notificationEmitter.emit("ListingCreated" , listing.message)
         return res.status(listing.status).json({
           message: listing.message,
           listing: listing.data,

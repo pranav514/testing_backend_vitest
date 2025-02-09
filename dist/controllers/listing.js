@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.specificlisting = exports.getlisting = exports.deletelisting = exports.updatelisting = exports.createlisting = void 0;
 const lisiting_1 = require("../services/lisiting");
+const notification_1 = require("../eventemitter/notification");
 const createlisting = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, description, images, rent, prefered_gender, address, location_city, } = req.body;
     const userId = req.userId;
@@ -25,15 +26,19 @@ const createlisting = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         userId,
     });
     if (listing.status === 402) {
+        notification_1.notificationEmitter.emit("error", listing.message);
         return res.status(listing.status).json({
             message: listing.message,
         });
     }
     if (listing.status === 411) {
+        notification_1.notificationEmitter.emit("error", listing.message);
         return res.status(listing.status).json({
             message: listing.message,
         });
     }
+    console.log("from the controller");
+    notification_1.notificationEmitter.emit("ListingCreated", listing.message);
     return res.status(listing.status).json({
         message: listing.message,
         listing: listing.data,

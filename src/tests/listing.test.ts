@@ -3,6 +3,7 @@ import request from "supertest";
 import { app } from "../index";
 import { prisma } from "../db";
 import { authMiddleware } from "../middleware/authMiddleware";
+import { notificationEmitter } from "../eventemitter/notification";
 
 vi.mock("../middleware/authMiddleware", () => ({
   authMiddleware: vi.fn((req, res, next) => {
@@ -36,6 +37,12 @@ vi.mock("jsonwebtoken", () => ({
   sign: vi.fn(() => "mocked-jwt-token"),
 }));
 
+vi.mock("../events/notificationEmitter", () => ({
+  notificationEmitter: {
+    emit: vi.fn(),
+  },
+}))
+
 describe("POST /createlisting", () => {
   it("should create the listing with valid data", async () => {
     const res = await request(app)
@@ -64,7 +71,6 @@ describe("POST /createlisting", () => {
         title: "xyz",
         description: "3bhk flat, 2 room vacancies, 5000 rent",
       });
-
     expect(res.statusCode).toBe(402);
     expect(res.body).toHaveProperty("message", "some fields are missing");
   });
