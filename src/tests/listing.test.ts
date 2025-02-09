@@ -4,6 +4,7 @@ import { app } from "../index";
 import { prisma } from "../db";
 import { authMiddleware } from "../middleware/authMiddleware";
 import { notificationEmitter } from "../eventemitter/notification";
+import { findMany } from "../repositories/listing";
 
 vi.mock("../middleware/authMiddleware", () => ({
   authMiddleware: vi.fn((req, res, next) => {
@@ -30,7 +31,11 @@ vi.mock("../db", () => ({
       ),
       update: vi.fn(),
       delete: vi.fn(),
+
     },
+    subscription : {
+      findMany : vi.fn(() =>Promise.resolve([]))
+    }
   },
 }));
 vi.mock("jsonwebtoken", () => ({
@@ -40,6 +45,7 @@ vi.mock("jsonwebtoken", () => ({
 vi.mock("../events/notificationEmitter", () => ({
   notificationEmitter: {
     emit: vi.fn(),
+    on : vi.fn(),
   },
 }))
 

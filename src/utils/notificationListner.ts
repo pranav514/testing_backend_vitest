@@ -1,20 +1,35 @@
 import { prisma } from "../db";
 import { notificationEmitter } from "../eventemitter/notification";
+import { GetTitle } from "../repositories/listing";
+import { FindMany } from "../repositories/subscription";
 
-notificationEmitter.on("ListingCreated", async (listing: any) => {
-    console.log("here")
-  const subscribers = await prisma.subscription.findMany({
-    where: { listingId: listing.id },
-    include: { user: true },
-  });
-
-  for (const subscriber of subscribers) {
-    console.log(subscriber);
-    await prisma.notification.create({
-      data: {
-        userId: subscriber.userId,
-        message: `New listing created: ${listing.title}`,
-      },
-    });
+export const notificationGenerator = notificationEmitter.on(
+  "ListingCreated",
+  async (listing: any) => {
+    console.log("here");
+    const subscribers = await FindMany();
+    console.log(subscribers);
+    for (const subscriber of subscribers) {
+      console.log(subscriber);
+      await prisma.notification.create({
+        data: {
+          userId: subscriber.userId,
+          message: `New listing created: ${listing.title}`,
+        },
+      });
+    }
   }
+);
+
+export const pingNotification =    notificationEmitter.on("PingCreated", async (ping: any) => {
+  console.log("reached here");
+  const postId = await ping.postId;
+  const userId = await ping.userId;
+  const postTitle = await GetTitle(postId);
+  await prisma.notification.create({
+    data: {
+      userId,
+      message: `user show interest on your post ${postTitle} listing you created `,
+    },
+  });
 });

@@ -4,6 +4,7 @@ import express, { Request, Response } from "express";
 import { CreateListing, DeleteListing, GetAll, GetUserSpecific, SpecificListing, UpdateListings } from "../services/lisiting";
 import { EventEmitter } from "events";
 import { notificationEmitter } from "../eventemitter/notification";
+import { notificationGenerator } from "../utils/notificationListner";
 export const createlisting = async(req : Request , res : Response ) : Promise<any> => {
      const {
           title,
@@ -37,7 +38,8 @@ export const createlisting = async(req : Request , res : Response ) : Promise<an
           });
         }
         console.log("from the controller")
-        notificationEmitter.emit("ListingCreated" , listing.message)
+        notificationEmitter.emit("ListingCreated" , listing.data)
+         notificationGenerator
         return res.status(listing.status).json({
           message: listing.message,
           listing: listing.data,

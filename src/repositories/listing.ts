@@ -119,3 +119,12 @@ export const deleteListing = async ({listingId , userId} : DeleteListingInterfac
       });
       return listing
 }
+
+export const GetTitle = async (postId : string) => {
+    const listing = await prisma.listing.findUnique({
+        where : {
+            id : postId
+        }
+    })
+    return listing?.title
+}

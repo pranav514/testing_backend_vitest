@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteListing = exports.findUniqueListing = exports.findMany = exports.findUnique = exports.Count = exports.getAll = exports.Update = exports.Create = void 0;
+exports.GetTitle = exports.deleteListing = exports.findUniqueListing = exports.findMany = exports.findUnique = exports.Count = exports.getAll = exports.Update = exports.Create = void 0;
 const db_1 = require("../db");
 const Create = ({ title, description, images, rent, prefered_gender, address, location_city, userId }) => __awaiter(void 0, void 0, void 0, function* () {
     const listing = yield db_1.prisma.listing.create({
@@ -120,3 +120,12 @@ const deleteListing = ({ listingId, userId }) => __awaiter(void 0, void 0, void 
     return listing;
 });
 exports.deleteListing = deleteListing;
+const GetTitle = (postId) => __awaiter(void 0, void 0, void 0, function* () {
+    const listing = yield db_1.prisma.listing.findUnique({
+        where: {
+            id: postId
+        }
+    });
+    return listing === null || listing === void 0 ? void 0 : listing.title;
+});
+exports.GetTitle = GetTitle;

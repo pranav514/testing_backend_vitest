@@ -9,14 +9,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.pingNotification = exports.notificationGenerator = void 0;
 const db_1 = require("../db");
 const notification_1 = require("../eventemitter/notification");
-notification_1.notificationEmitter.on("ListingCreated", (listing) => __awaiter(void 0, void 0, void 0, function* () {
+const listing_1 = require("../repositories/listing");
+const subscription_1 = require("../repositories/subscription");
+exports.notificationGenerator = notification_1.notificationEmitter.on("ListingCreated", (listing) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("here");
-    const subscribers = yield db_1.prisma.subscription.findMany({
-        where: { listingId: listing.id },
-        include: { user: true },
-    });
+    const subscribers = yield (0, subscription_1.FindMany)();
+    console.log(subscribers);
     for (const subscriber of subscribers) {
         console.log(subscriber);
         yield db_1.prisma.notification.create({
@@ -26,4 +27,16 @@ notification_1.notificationEmitter.on("ListingCreated", (listing) => __awaiter(v
             },
         });
     }
+}));
+exports.pingNotification = notification_1.notificationEmitter.on("PingCreated", (ping) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("reached here");
+    const postId = yield ping.postId;
+    const userId = yield ping.userId;
+    const postTitle = yield (0, listing_1.GetTitle)(postId);
+    yield db_1.prisma.notification.create({
+        data: {
+            userId,
+            message: `user show interest on your post ${postTitle} listing you created `,
+        },
+    });
 }));
