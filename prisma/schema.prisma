@@ -40,7 +40,6 @@ model Listing{
   userId String
   user User @relation(fields: [userId] , references: [id])
   pings Ping[]
-  subscriptions Subscription[]
 }
 
 model Ping{
@@ -57,9 +56,7 @@ model Ping{
 model Subscription {
   id       String   @id @default(uuid())
   userId   String
-  listingId String
   user     User     @relation(fields: [userId], references: [id])
-  listing  Listing  @relation(fields: [listingId], references: [id])
 }
 
 model Notification {

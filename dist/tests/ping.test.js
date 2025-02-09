@@ -44,7 +44,21 @@ vitest_1.vi.mock("../db", () => ({
             update: vitest_1.vi.fn(),
             delete: vitest_1.vi.fn(),
         },
+        notification: {
+            create: vitest_1.vi.fn(() => Promise.resolve({
+                id: "notification_123",
+                userId: "userId_123",
+                message: "New ping created",
+                createdAt: new Date(),
+            }))
+        }
     },
+}));
+vitest_1.vi.mock("../events/notificationEmitter", () => ({
+    notificationEmitter: {
+        emit: vitest_1.vi.fn(),
+        on: vitest_1.vi.fn()
+    }
 }));
 vitest_1.vi.mock("jsonwebtoken", () => ({
     sign: vitest_1.vi.fn(() => "mocked-jwt-token"),

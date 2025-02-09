@@ -12,6 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userping = exports.updateping = exports.createping = void 0;
 const ping_1 = require("../repositories/ping");
 const ping_2 = require("../services/ping");
+const notification_1 = require("../eventemitter/notification");
+const notificationListner_1 = require("../utils/notificationListner");
 const createping = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { message } = req.body;
     const postId = req.params.id;
@@ -19,17 +21,19 @@ const createping = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     const ping = yield (0, ping_2.CreatePing)({ message, postId, userId });
     if (ping.status == 422) {
         return res.status(ping.status).json({
-            message: ping.message
+            message: ping.message,
         });
     }
     if (ping.status == 411) {
         return res.status(ping.status).json({
-            message: ping.message
+            message: ping.message,
         });
     }
+    notification_1.notificationEmitter.emit("PingCreated", ping.ping);
+    notificationListner_1.pingNotification;
     return res.status(200).json({
         message: ping.message,
-        ping: ping.ping
+        ping: ping.ping,
     });
 });
 exports.createping = createping;
@@ -42,11 +46,11 @@ const updateping = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     const updatePing = yield (0, ping_2.UpdatePing)({ message, postId, userId });
     if (updatePing.status === 411) {
         return res.status(updatePing.status).json({
-            message: updatePing.message
+            message: updatePing.message,
         });
     }
     return res.status(updatePing.status).json({
-        message: updatePing.message
+        message: updatePing.message,
     });
 });
 exports.updateping = updateping;
@@ -61,7 +65,7 @@ const userping = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     return res.status(userPing.status).json({
         message: userPing.message,
-        pings: userPing.pings
+        pings: userPing.pings,
     });
 });
 exports.userping = userping;

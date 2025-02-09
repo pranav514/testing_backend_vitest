@@ -5,7 +5,6 @@ export const findUnique = async({userId , listingId} : DeleteListingInterface) =
     const notification = await prisma.subscription.findFirst({
         where : {
             userId,
-            listingId
 
         }
     })
@@ -16,8 +15,12 @@ export const Create = async ({userId , listingId} : DeleteListingInterface) => {
     const subscription = await prisma.subscription.create({
         data : {
             userId,
-            listingId
         }
     })
     return subscription
+}
+
+export const FindMany = async() => {
+    const subscribers = await prisma.subscription.findMany({});
+    return subscribers
 }

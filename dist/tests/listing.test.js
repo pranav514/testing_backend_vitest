@@ -44,6 +44,11 @@ vitest_1.vi.mock("../db", () => ({
 vitest_1.vi.mock("jsonwebtoken", () => ({
     sign: vitest_1.vi.fn(() => "mocked-jwt-token"),
 }));
+vitest_1.vi.mock("../events/notificationEmitter", () => ({
+    notificationEmitter: {
+        emit: vitest_1.vi.fn(),
+    },
+}));
 (0, vitest_1.describe)("POST /createlisting", () => {
     (0, vitest_1.it)("should create the listing with valid data", () => __awaiter(void 0, void 0, void 0, function* () {
         const res = yield (0, supertest_1.default)(index_1.app)

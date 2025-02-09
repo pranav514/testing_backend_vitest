@@ -37,9 +37,23 @@ vi.mock("../db", () => ({
       update: vi.fn(),
       delete: vi.fn(),
     },
+    notification : {
+      create : vi.fn(() => Promise.resolve({
+        id: "notification_123",
+          userId: "userId_123",
+          message: "New ping created",
+          createdAt: new Date(),
+      }))
+    }
   },
 }));
 
+vi.mock("../events/notificationEmitter" , () => ({
+  notificationEmitter : {
+    emit : vi.fn(),
+    on : vi.fn()
+  }
+}))
 
 vi.mock("jsonwebtoken", () => ({
   sign: vi.fn(() => "mocked-jwt-token"),
