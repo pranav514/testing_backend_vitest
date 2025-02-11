@@ -4,7 +4,7 @@ import express, { Request, Response } from "express";
 import { CreateListing, DeleteListing, GetAll, GetUserSpecific, SpecificListing, UpdateListings } from "../services/lisiting";
 import { EventEmitter } from "events";
 import { notificationEmitter } from "../eventemitter/notification";
-import { notificationGenerator } from "../utils/notificationListner";
+import { notificationGenerator, specificlistingNotification } from "../utils/notificationListner";
 export const createlisting = async(req : Request , res : Response ) : Promise<any> => {
      const {
           title,
@@ -72,11 +72,15 @@ export const updatelisting = async (req : Request , res : Response) : Promise<an
           
           if(updateListing.status === 411){
             return res.status(updateListing.status).json({
-              message : updateListing.message
+              message : updateListing.message,
             })
           }
+          notificationEmitter.emit("ListingUpdated" , updateListing.data)
+          specificlistingNotification
           return res.status(updateListing.status).json({
-            message : updateListing.message
+            message : updateListing.message,
+            data: updateListing.data
+
           })
       
 }

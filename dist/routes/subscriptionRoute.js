@@ -7,5 +7,6 @@ const express_1 = __importDefault(require("express"));
 const authMiddleware_1 = require("../middleware/authMiddleware");
 const subscription_1 = require("../controllers/subscription");
 const router = express_1.default.Router();
-router.post('/createsubscription/:id', authMiddleware_1.authMiddleware, subscription_1.CreateSubscription);
+router.post('/createsubscription', authMiddleware_1.authMiddleware, subscription_1.CreateSubscription);
+router.post('/createlistingsubscription/:id', authMiddleware_1.authMiddleware, subscription_1.CreateListingSubscription);
 exports.default = router;

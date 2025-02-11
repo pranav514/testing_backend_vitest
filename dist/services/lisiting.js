@@ -58,6 +58,7 @@ const UpdateListings = ({ title, description, images, rent, prefered_gender, add
         return {
             message: "listing updated succesfully",
             status: 200,
+            data: listing
         };
     }
     catch (error) {

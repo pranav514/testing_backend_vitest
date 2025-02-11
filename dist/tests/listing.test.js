@@ -39,6 +39,9 @@ vitest_1.vi.mock("../db", () => ({
             update: vitest_1.vi.fn(),
             delete: vitest_1.vi.fn(),
         },
+        subscription: {
+            findMany: vitest_1.vi.fn(() => Promise.resolve([]))
+        }
     },
 }));
 vitest_1.vi.mock("jsonwebtoken", () => ({
@@ -47,6 +50,7 @@ vitest_1.vi.mock("jsonwebtoken", () => ({
 vitest_1.vi.mock("../events/notificationEmitter", () => ({
     notificationEmitter: {
         emit: vitest_1.vi.fn(),
+        on: vitest_1.vi.fn(),
     },
 }));
 (0, vitest_1.describe)("POST /createlisting", () => {
