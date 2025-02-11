@@ -21,7 +21,7 @@ spec:
           env:
             - name: DATABASE_URL
               valueFrom:
-                configMapKeyRef:
-                  name : backend-config
+                secretKeyRef:
+                  name : db-secret
                   key : DATABASE_URL
 

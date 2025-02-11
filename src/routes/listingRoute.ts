@@ -1,15 +1,6 @@
 import express from "express";
 import { prisma } from "../db";
 import { authMiddleware } from "../middleware/authMiddleware";
-import {
-  Count,
-  Create,
-  deleteListing,
-  findUnique,
-  getAll,
-  Update,
-} from "../repositories/listing";
-import { CreateListing, DeleteListing, GetAll, GetUserSpecific, SpecificListing, UpdateListings } from "../services/lisiting";
 import { createlisting, deletelisting, getlisting, specificlisting, updatelisting } from "../controllers/listing";
 const router = express.Router();
 
