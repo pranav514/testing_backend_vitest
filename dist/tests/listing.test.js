@@ -41,6 +41,9 @@ vitest_1.vi.mock("../db", () => ({
         },
         subscription: {
             findMany: vitest_1.vi.fn(() => Promise.resolve([]))
+        },
+        listingNotifySubscription: {
+            findMany: vitest_1.vi.fn(() => Promise.resolve([]))
         }
     },
 }));

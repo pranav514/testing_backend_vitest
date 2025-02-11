@@ -1,20 +1,25 @@
 import { prisma } from "../db";
 import { DeleteListingInterface } from "../interface/authInterface";
+import { CreateSubscriptionInterface } from "../interface/subscriptionInterface";
 
-export const findUnique = async(userId : string) => {
+
+export const findUnique = async({userId , location} : CreateSubscriptionInterface) => {
     const notification = await prisma.subscription.findFirst({
         where : {
             userId,
-
+            location: {
+                hasEvery: location
+            }
         }
     })
     return notification
 }
 
-export const Create = async (userId  : string) => {
+export const Create = async ({userId , location} : CreateSubscriptionInterface) => {
     const subscription = await prisma.subscription.create({
         data : {
             userId,
+            location
         }
     })
     return subscription

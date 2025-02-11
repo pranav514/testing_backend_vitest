@@ -1,14 +1,15 @@
+import { CreateSubscriptionInterface } from "../interface/subscriptionInterface"
 import { Create, CreateListingSubsripton, findUnique } from "../repositories/subscription"
 
-export const CreateSubscriptions = async (userId : string) => {
-    const suscribed  = await findUnique(userId )
+export const CreateSubscriptions = async ({userId , location} : CreateSubscriptionInterface) => {
+    const suscribed  = await findUnique({userId , location} )
     if(suscribed){
         return {
             message : "You have already subscribed to this listing",
-            status : 402,
+            status : 409,
         }
     }
-    const subscription = await Create(userId )
+    const subscription = await Create({userId , location})
     return {
         message : "Subscribed successfully",
         status : 200,
