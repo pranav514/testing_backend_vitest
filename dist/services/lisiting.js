@@ -9,9 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetUserSpecific = exports.SpecificListing = exports.GetAll = exports.DeleteListing = exports.UpdateListings = exports.CreateListing = void 0;
+exports.GetUserSpecific = exports.SpecificListing = exports.GetAll = exports.DeleteListing = exports.UpdateListings = exports.CreateListing = exports.avnishv = void 0;
 const listing_1 = require("../repositories/listing");
 const db_1 = require("../db");
+const avnishv = () => {
+    const hello = console.log("hello world");
+};
+exports.avnishv = avnishv;
 const CreateListing = ({ title, description, images, rent, prefered_gender, address, location_city, userId }) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (!title || !description || !address || !location_city) {
@@ -89,7 +93,7 @@ const GetAll = ({ skip, limit, page }) => __awaiter(void 0, void 0, void 0, func
         }
         const listing = yield (0, listing_1.getAll)({ skip, limit });
         const totalCount = yield (0, listing_1.Count)();
-        const totalPage = Math.ceil(totalCount / limit);
+        const totalPage = Math.ceil(totalCount / Number(limit));
         const responseData = {
             listing: listing,
             pagination: {
