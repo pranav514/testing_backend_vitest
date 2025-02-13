@@ -11,13 +11,15 @@ export const notificationGenerator = notificationEmitter.on(
     console.log(subscribers);
     for (const subscriber of subscribers) {
       console.log(subscriber);
-      
-      await prisma.notification.create({
+      if(subscriber.location.find((location : string) => location === listing.location_city)){
+              await prisma.notification.create({
         data: {
           userId: subscriber.userId,
           message: `New listing created: ${listing.title}`,
         },
       });
+      }
+
     }
   }
 );

@@ -11,15 +11,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateSubscriptionLisiting = exports.CreateSubscriptions = void 0;
 const subscription_1 = require("../repositories/subscription");
-const CreateSubscriptions = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const suscribed = yield (0, subscription_1.findUnique)(userId);
+const CreateSubscriptions = ({ userId, location }) => __awaiter(void 0, void 0, void 0, function* () {
+    const suscribed = yield (0, subscription_1.findUnique)({ userId, location });
     if (suscribed) {
         return {
             message: "You have already subscribed to this listing",
-            status: 402,
+            status: 409,
         };
     }
-    const subscription = yield (0, subscription_1.Create)(userId);
+    const subscription = yield (0, subscription_1.Create)({ userId, location });
     return {
         message: "Subscribed successfully",
         status: 200,

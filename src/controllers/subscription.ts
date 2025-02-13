@@ -3,7 +3,8 @@ import { CreateSubscriptionLisiting, CreateSubscriptions } from "../services/sub
 
 export const CreateSubscription = async(req: Request , res : Response) : Promise<any> => {
     const userId = req.userId
-    const subscription = await CreateSubscriptions(userId);
+    const location = req.body.location
+    const subscription = await CreateSubscriptions({userId , location});
     if(subscription.status == 402){
         return res.status(subscription.status).json({
             message : subscription.message

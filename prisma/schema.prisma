@@ -58,6 +58,7 @@ model Ping{
 model Subscription {
   id       String   @id @default(uuid())
   userId   String
+  location String[]
   user     User     @relation(fields: [userId], references: [id])
 }
 

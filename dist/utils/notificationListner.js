@@ -20,12 +20,14 @@ exports.notificationGenerator = notification_1.notificationEmitter.on("ListingCr
     console.log(subscribers);
     for (const subscriber of subscribers) {
         console.log(subscriber);
-        yield db_1.prisma.notification.create({
-            data: {
-                userId: subscriber.userId,
-                message: `New listing created: ${listing.title}`,
-            },
-        });
+        if (subscriber.location.find((location) => location === listing.location_city)) {
+            yield db_1.prisma.notification.create({
+                data: {
+                    userId: subscriber.userId,
+                    message: `New listing created: ${listing.title}`,
+                },
+            });
+        }
     }
 }));
 exports.specificlistingNotification = notification_1.notificationEmitter.on("ListingUpdated", (listing) => __awaiter(void 0, void 0, void 0, function* () {

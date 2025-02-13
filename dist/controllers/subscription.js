@@ -13,7 +13,8 @@ exports.CreateListingSubscription = exports.CreateSubscription = void 0;
 const subscription_1 = require("../services/subscription");
 const CreateSubscription = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.userId;
-    const subscription = yield (0, subscription_1.CreateSubscriptions)(userId);
+    const location = req.body.location;
+    const subscription = yield (0, subscription_1.CreateSubscriptions)({ userId, location });
     if (subscription.status == 402) {
         return res.status(subscription.status).json({
             message: subscription.message

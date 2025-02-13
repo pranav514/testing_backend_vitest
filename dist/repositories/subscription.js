@@ -11,19 +11,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateListingSubsripton = exports.FindListingSuscribers = exports.FindMany = exports.Create = exports.findUnique = void 0;
 const db_1 = require("../db");
-const findUnique = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+const findUnique = ({ userId, location }) => __awaiter(void 0, void 0, void 0, function* () {
     const notification = yield db_1.prisma.subscription.findFirst({
         where: {
             userId,
+            location: {
+                hasEvery: location
+            }
         }
     });
     return notification;
 });
 exports.findUnique = findUnique;
-const Create = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+const Create = ({ userId, location }) => __awaiter(void 0, void 0, void 0, function* () {
     const subscription = yield db_1.prisma.subscription.create({
         data: {
             userId,
+            location
         }
     });
     return subscription;
