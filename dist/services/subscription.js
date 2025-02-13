@@ -9,17 +9,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateSubscriptions = void 0;
+exports.CreateSubscriptionLisiting = exports.CreateSubscriptions = void 0;
 const subscription_1 = require("../repositories/subscription");
-const CreateSubscriptions = ({ userId, listingId }) => __awaiter(void 0, void 0, void 0, function* () {
-    const suscribed = yield (0, subscription_1.findUnique)({ userId, listingId });
+const CreateSubscriptions = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const suscribed = yield (0, subscription_1.findUnique)(userId);
     if (suscribed) {
         return {
             message: "You have already subscribed to this listing",
             status: 402,
         };
     }
-    const subscription = yield (0, subscription_1.Create)({ userId, listingId });
+    const subscription = yield (0, subscription_1.Create)(userId);
     return {
         message: "Subscribed successfully",
         status: 200,
@@ -27,3 +27,12 @@ const CreateSubscriptions = ({ userId, listingId }) => __awaiter(void 0, void 0,
     };
 });
 exports.CreateSubscriptions = CreateSubscriptions;
+const CreateSubscriptionLisiting = (userId, listingId) => __awaiter(void 0, void 0, void 0, function* () {
+    const subscription = yield (0, subscription_1.CreateListingSubsripton)({ userId, listingId });
+    return {
+        message: "Subscribed successfully",
+        status: 200,
+        data: subscription
+    };
+});
+exports.CreateSubscriptionLisiting = CreateSubscriptionLisiting;

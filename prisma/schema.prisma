@@ -24,6 +24,7 @@ model User{
   pings Ping[]
   subscriptions Subscription[]
   notifications Notification[]
+  listingNotifySubscriptions ListingNotifySubscription[]
 }
 
 model Listing{
@@ -40,6 +41,7 @@ model Listing{
   userId String
   user User @relation(fields: [userId] , references: [id])
   pings Ping[]
+  listingNotifySubscriptions ListingNotifySubscription[]
 }
 
 model Ping{
@@ -66,4 +68,12 @@ model Notification {
   read        Boolean  @default(false)
   createdAt   DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id])
+}
+
+model ListingNotifySubscription {
+  id       String   @id @default(uuid())
+  userId   String
+  listingId String
+  user     User     @relation(fields: [userId], references: [id])
+  listing  Listing  @relation(fields: [listingId], references: [id])
 }

@@ -60,11 +60,14 @@ const updatelisting = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         userId });
     if (updateListing.status === 411) {
         return res.status(updateListing.status).json({
-            message: updateListing.message
+            message: updateListing.message,
         });
     }
+    notification_1.notificationEmitter.emit("ListingUpdated", updateListing.data);
+    notificationListner_1.specificlistingNotification;
     return res.status(updateListing.status).json({
-        message: updateListing.message
+        message: updateListing.message,
+        data: updateListing.data
     });
 });
 exports.updatelisting = updatelisting;

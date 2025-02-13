@@ -60,6 +60,7 @@ export const UpdateListings  = async ({title,
             return {
                 message : "listing updated succesfully",
                 status  : 200,
+                data : listing
             }
           }
         

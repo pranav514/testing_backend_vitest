@@ -1,7 +1,8 @@
 import express from "express"
 
 import { authMiddleware } from "../middleware/authMiddleware";
-import { CreateSubscription } from "../controllers/subscription";
+import { CreateListingSubscription, CreateSubscription } from "../controllers/subscription";
 const router = express.Router();
-router.post('/createsubscription/:id' , authMiddleware , CreateSubscription);
+router.post('/createsubscription' , authMiddleware , CreateSubscription);
+router.post('/createlistingsubscription/:id' , authMiddleware , CreateListingSubscription);
 export default router

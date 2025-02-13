@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.pingNotification = exports.notificationGenerator = void 0;
+exports.pingNotification = exports.specificlistingNotification = exports.notificationGenerator = void 0;
 const db_1 = require("../db");
 const notification_1 = require("../eventemitter/notification");
 const listing_1 = require("../repositories/listing");
@@ -25,6 +25,17 @@ exports.notificationGenerator = notification_1.notificationEmitter.on("ListingCr
                 userId: subscriber.userId,
                 message: `New listing created: ${listing.title}`,
             },
+        });
+    }
+}));
+exports.specificlistingNotification = notification_1.notificationEmitter.on("ListingUpdated", (listing) => __awaiter(void 0, void 0, void 0, function* () {
+    const subscribers = yield (0, subscription_1.FindListingSuscribers)(listing.id);
+    for (const subscriber of subscribers) {
+        yield db_1.prisma.notification.create({
+            data: {
+                userId: subscriber.userId,
+                message: `Listing updated : ${listing.title}`
+            }
         });
     }
 }));

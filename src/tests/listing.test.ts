@@ -35,6 +35,9 @@ vi.mock("../db", () => ({
     },
     subscription : {
       findMany : vi.fn(() =>Promise.resolve([]))
+    },
+    listingNotifySubscription : {
+      findMany : vi.fn(() =>Promise.resolve([]))
     }
   },
 }));

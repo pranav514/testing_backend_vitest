@@ -9,12 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateSubscription = void 0;
+exports.CreateListingSubscription = exports.CreateSubscription = void 0;
 const subscription_1 = require("../services/subscription");
 const CreateSubscription = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const listingId = req.params.id;
     const userId = req.userId;
-    const subscription = yield (0, subscription_1.CreateSubscriptions)({ userId, listingId });
+    const subscription = yield (0, subscription_1.CreateSubscriptions)(userId);
     if (subscription.status == 402) {
         return res.status(subscription.status).json({
             message: subscription.message
@@ -26,3 +25,13 @@ const CreateSubscription = (req, res) => __awaiter(void 0, void 0, void 0, funct
     });
 });
 exports.CreateSubscription = CreateSubscription;
+const CreateListingSubscription = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const listingId = req.params.id;
+    const userId = req.userId;
+    const subscription = yield (0, subscription_1.CreateSubscriptionLisiting)(userId, listingId);
+    return res.status(subscription.status).json({
+        message: subscription.message,
+        data: subscription.data
+    });
+});
+exports.CreateListingSubscription = CreateListingSubscription;
