@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: backend-config
-data:
-  DATABASE_URL: |
-    postgresql://neondb_owner:xyz/neondb?sslmode=require
