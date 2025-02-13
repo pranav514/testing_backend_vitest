@@ -4,4 +4,4 @@ metadata:
   name: backend-config
 data:
   DATABASE_URL: |
-    postgresql://neondb_owner:npg_bwL4OdvAifc6@ep-cold-unit-a84yyr2y.eastus2.azure.neon.tech/neondb?sslmode=require
+    postgresql://neondb_owner:xyz/neondb?sslmode=require

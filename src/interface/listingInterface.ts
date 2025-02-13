@@ -26,8 +26,6 @@ export interface Pagination{
     limit : Number
 }
 
-export interface Getall{
-    skip : Number,
-    limit : Number,
+export interface Getall extends Pagination{
     page : Number,
 }
