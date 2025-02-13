@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateListingSubscription = exports.CreateSubscription = void 0;
+exports.GetListingSuscribers = exports.DeleteListingSubscription = exports.DeleteSubscription = exports.CreateListingSubscription = exports.CreateSubscription = void 0;
 const subscription_1 = require("../services/subscription");
 const CreateSubscription = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.userId;
@@ -36,3 +36,45 @@ const CreateListingSubscription = (req, res) => __awaiter(void 0, void 0, void 0
     });
 });
 exports.CreateListingSubscription = CreateListingSubscription;
+const DeleteSubscription = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.userId;
+    const subscription = yield (0, subscription_1.DeleteSubscriptions)(userId);
+    if (subscription.status == 404) {
+        return res.status(subscription.status).json({
+            message: subscription.message
+        });
+    }
+    return res.status(subscription.status).json({
+        message: subscription.message,
+        data: subscription.data
+    });
+});
+exports.DeleteSubscription = DeleteSubscription;
+const DeleteListingSubscription = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.userId;
+    const subscription = yield (0, subscription_1.DeleteListingSubscriptions)(userId);
+    if (subscription.status == 404) {
+        return res.status(subscription.status).json({
+            message: subscription.message
+        });
+    }
+    return res.status(subscription.status).json({
+        message: subscription.message,
+        data: subscription.data
+    });
+});
+exports.DeleteListingSubscription = DeleteListingSubscription;
+const GetListingSuscribers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const listingId = req.params.id;
+    const subscribers = yield (0, subscription_1.GetListingSubscription)(listingId);
+    if (subscribers.status == 404) {
+        return res.status(subscribers.status).json({
+            message: subscribers.message
+        });
+    }
+    return res.status(subscribers.status).json({
+        message: subscribers.message,
+        data: subscribers.data
+    });
+});
+exports.GetListingSuscribers = GetListingSuscribers;

@@ -1,5 +1,5 @@
 import { CreateSubscriptionInterface } from "../interface/subscriptionInterface"
-import { Create, CreateListingSubsripton, findUnique } from "../repositories/subscription"
+import { Create, CreateListingSubsripton, DeleteListingSubscription, DeleteSubscription, findUnique, GetListingSuscribers, ListingSubscriptionCount, SubscriptionCount } from "../repositories/subscription"
 
 export const CreateSubscriptions = async ({userId , location} : CreateSubscriptionInterface) => {
     const suscribed  = await findUnique({userId , location} )
@@ -23,5 +23,54 @@ export const CreateSubscriptionLisiting = async (userId : string, listingId : st
         message : "Subscribed successfully",
         status : 200,
         data : subscription
+    }
+}
+
+export const DeleteSubscriptions  = async (userId : string) => {
+    const count = await SubscriptionCount(userId)
+    if(count == 0){
+        return {
+            message : "You are not subscribed to any listing",
+            status : 404
+        }
+    }
+    const subscription = await DeleteSubscription(userId)
+    return {
+        message : "Subscription deleted successfully",
+        status : 200,
+        data : subscription
+    }
+}
+
+export const DeleteListingSubscriptions  = async (userId : string) => {
+    const count = await ListingSubscriptionCount(userId)
+    if(count == 0){
+        return {
+            message : "You are not subscribed to any listing",
+            status : 404
+        }
+    }
+    const subscription = await DeleteListingSubscription(userId)
+    return {
+        message : "Subscription deleted successfully",
+        status : 200,
+        data : subscription
+    }
+}
+
+export const GetListingSubscription = async (listingId : string) => {
+    const subscribers = await GetListingSuscribers(listingId)
+    console.log(subscribers)
+
+    if(subscribers.length == 0){
+        return {
+            message : "No subscribers found",
+            status : 404
+        }
+    }
+    return {
+        message : "Listing subscribers",
+        status : 200,
+        data : subscribers
     }
 }

@@ -48,3 +48,48 @@ export const CreateListingSubsripton  = async({userId, listingId} : DeleteListin
     return listing_suscription
 
 }
+
+export const DeleteSubscription = async(userId : string) => {
+    const subscription = await prisma.subscription.deleteMany({
+        where : {
+            userId
+        }
+    })
+    return subscription
+ }
+
+export const DeleteListingSubscription = async(userId : string) => {
+    const subscription = await prisma.listingNotifySubscription.deleteMany({
+        where : {
+            userId
+        }
+    })
+    return subscription
+}
+
+export const SubscriptionCount = async(userId: string) => {
+    const count = await prisma.subscription.count({
+        where : {
+            userId
+        }
+    })
+    return count
+} 
+
+export const ListingSubscriptionCount = async(userId: string) => {
+    const count = await prisma.listingNotifySubscription.count({
+        where : {
+            userId
+        }
+    })
+    return count
+}
+
+export const GetListingSuscribers = async(listingId : string) => {
+    const subscribers = await prisma.listingNotifySubscription.findMany({
+        where : {
+            listingId
+        }
+    })
+    return subscribers
+}
