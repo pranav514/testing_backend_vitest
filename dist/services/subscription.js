@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DeleteListingSubscriptions = exports.DeleteSubscriptions = exports.CreateSubscriptionLisiting = exports.CreateSubscriptions = void 0;
+exports.GetListingSubscription = exports.DeleteListingSubscriptions = exports.DeleteSubscriptions = exports.CreateSubscriptionLisiting = exports.CreateSubscriptions = void 0;
 const subscription_1 = require("../repositories/subscription");
 const CreateSubscriptions = ({ userId, location }) => __awaiter(void 0, void 0, void 0, function* () {
     const suscribed = yield (0, subscription_1.findUnique)({ userId, location });
@@ -68,3 +68,19 @@ const DeleteListingSubscriptions = (userId) => __awaiter(void 0, void 0, void 0,
     };
 });
 exports.DeleteListingSubscriptions = DeleteListingSubscriptions;
+const GetListingSubscription = (listingId) => __awaiter(void 0, void 0, void 0, function* () {
+    const subscribers = yield (0, subscription_1.GetListingSuscribers)(listingId);
+    console.log(subscribers);
+    if (subscribers.length == 0) {
+        return {
+            message: "No subscribers found",
+            status: 404
+        };
+    }
+    return {
+        message: "Listing subscribers",
+        status: 200,
+        data: subscribers
+    };
+});
+exports.GetListingSubscription = GetListingSubscription;

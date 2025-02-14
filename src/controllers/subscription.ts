@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { CreateSubscriptionLisiting, CreateSubscriptions, DeleteListingSubscriptions, DeleteSubscriptions } from "../services/subscription";
+import { CreateSubscriptionLisiting, CreateSubscriptions, DeleteListingSubscriptions, DeleteSubscriptions, GetListingSubscription } from "../services/subscription";
 
 export const CreateSubscription = async(req: Request , res : Response) : Promise<any> => {
     const userId = req.userId
@@ -53,4 +53,18 @@ export const DeleteListingSubscription = async (req : Request , res : Response) 
         message : subscription.message,
         data : subscription.data
     })
+}
+
+export const GetListingSuscribers = async(req: Request , res : Response) : Promise<any> => {
+    const listingId = req.params.id
+    const subscribers = await GetListingSubscription(listingId);
+    if(subscribers.status == 404){
+        return res.status(subscribers.status).json({
+            message : subscribers.message
+        })
+    }
+   return res.status(subscribers.status).json({
+        message : subscribers.message,
+        data : subscribers.data
+   })
 }

@@ -84,3 +84,12 @@ export const ListingSubscriptionCount = async(userId: string) => {
     })
     return count
 }
+
+export const GetListingSuscribers = async(listingId : string) => {
+    const subscribers = await prisma.listingNotifySubscription.findMany({
+        where : {
+            listingId
+        }
+    })
+    return subscribers
+}

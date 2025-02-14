@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ListingSubscriptionCount = exports.SubscriptionCount = exports.DeleteListingSubscription = exports.DeleteSubscription = exports.CreateListingSubsripton = exports.FindListingSuscribers = exports.FindMany = exports.Create = exports.findUnique = void 0;
+exports.GetListingSuscribers = exports.ListingSubscriptionCount = exports.SubscriptionCount = exports.DeleteListingSubscription = exports.DeleteSubscription = exports.CreateListingSubsripton = exports.FindListingSuscribers = exports.FindMany = exports.Create = exports.findUnique = void 0;
 const db_1 = require("../db");
 const findUnique = ({ userId, location }) => __awaiter(void 0, void 0, void 0, function* () {
     const notification = yield db_1.prisma.subscription.findFirst({
@@ -93,3 +93,12 @@ const ListingSubscriptionCount = (userId) => __awaiter(void 0, void 0, void 0, f
     return count;
 });
 exports.ListingSubscriptionCount = ListingSubscriptionCount;
+const GetListingSuscribers = (listingId) => __awaiter(void 0, void 0, void 0, function* () {
+    const subscribers = yield db_1.prisma.listingNotifySubscription.findMany({
+        where: {
+            listingId
+        }
+    });
+    return subscribers;
+});
+exports.GetListingSuscribers = GetListingSuscribers;

@@ -1,5 +1,5 @@
 import { CreateSubscriptionInterface } from "../interface/subscriptionInterface"
-import { Create, CreateListingSubsripton, DeleteListingSubscription, DeleteSubscription, findUnique, ListingSubscriptionCount, SubscriptionCount } from "../repositories/subscription"
+import { Create, CreateListingSubsripton, DeleteListingSubscription, DeleteSubscription, findUnique, GetListingSuscribers, ListingSubscriptionCount, SubscriptionCount } from "../repositories/subscription"
 
 export const CreateSubscriptions = async ({userId , location} : CreateSubscriptionInterface) => {
     const suscribed  = await findUnique({userId , location} )
@@ -55,5 +55,22 @@ export const DeleteListingSubscriptions  = async (userId : string) => {
         message : "Subscription deleted successfully",
         status : 200,
         data : subscription
+    }
+}
+
+export const GetListingSubscription = async (listingId : string) => {
+    const subscribers = await GetListingSuscribers(listingId)
+    console.log(subscribers)
+
+    if(subscribers.length == 0){
+        return {
+            message : "No subscribers found",
+            status : 404
+        }
+    }
+    return {
+        message : "Listing subscribers",
+        status : 200,
+        data : subscribers
     }
 }
