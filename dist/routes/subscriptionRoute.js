@@ -9,4 +9,6 @@ const subscription_1 = require("../controllers/subscription");
 const router = express_1.default.Router();
 router.post('/createsubscription', authMiddleware_1.authMiddleware, subscription_1.CreateSubscription);
 router.post('/createlistingsubscription/:id', authMiddleware_1.authMiddleware, subscription_1.CreateListingSubscription);
+router.delete('/deletesubscription', authMiddleware_1.authMiddleware, subscription_1.DeleteSubscription);
+router.delete('/deletelistingsubscription', authMiddleware_1.authMiddleware, subscription_1.DeleteListingSubscription);
 exports.default = router;
